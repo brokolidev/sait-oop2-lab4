@@ -49,7 +49,9 @@
                 Background="Gray"
             WidthRequest="100" HeightRequest="100" CornerRadius="50" FontSize="30" Text="3"></Button>
             <Button 
+                x:Name="MultiplyButton"
             Background="Orange"
+                Clicked="MultiplyButton_Clicked"
             WidthRequest="100" HeightRequest="100" CornerRadius="50" FontSize="30" Text="x"></Button>
         </HorizontalStackLayout>
 

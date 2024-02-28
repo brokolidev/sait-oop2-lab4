@@ -157,7 +157,7 @@
             // get number to add
             float numberToSub = float.Parse(_mainDisplayText);
 
-            // protecting first nuber to be negative
+            // protecting first number to be negative
             if (_totalNumber == 0)
             {
                 numberToSub *= -1;
@@ -170,7 +170,7 @@
             // update the main display text
             _mainDisplayText = $"{_totalNumber}";
 
-            // protecting first nuber to be negative
+            // protecting first number to be negative
             if (numberToSub == _totalNumber)
             {
                 _totalNumber *= -1;
@@ -211,6 +211,9 @@
                 case "minus":
                     _totalNumber -= numberToCalculate;
                     break;
+                case "multiply":
+                    _totalNumber *= numberToCalculate;
+                    break;
                 default:
                     return;
             }
@@ -234,6 +237,39 @@
 
             _mainDisplayText = _isFirstNumber ? "." : _mainDisplayText + ".";
             _isFirstNumber = !_isFirstNumber && _isFirstNumber;
+            UpdateDisplay();
+        }
+
+        private void MultiplyButton_Clicked(object sender, EventArgs e)
+        {
+            // check if there is a number to multiply
+            if (String.IsNullOrEmpty(_mainDisplayText))
+            {
+                System.Diagnostics.Debug.WriteLine("No number to multiply.");
+                return;
+            }
+
+            // get number to multiply
+            float numberToMultiply = float.Parse(_mainDisplayText);
+
+            // save the method and the number
+            _calculatingMethod = "multiply";
+
+            // preventing multiply by 0
+            if(_totalNumber == 0)
+            {
+                _totalNumber = numberToMultiply;
+            } 
+            else
+            {
+                _totalNumber *= numberToMultiply;
+            }
+            
+
+            // update the main display text
+            _mainDisplayText = $"{_totalNumber}";
+
+            _isFirstNumber = true;
             UpdateDisplay();
         }
     }

@@ -102,6 +102,7 @@
                 CornerRadius="50" WidthRequest="210" HeightRequest="100" FontSize="30" Text="0"></Button>
             <Button x:Name="NumberDot"
                 Background="Gray"
+                    Clicked="NumberDot_Clicked"
                 CornerRadius="50" WidthRequest="100" HeightRequest="100" FontSize="30" Text="."></Button>
             <Button 
             x:Name="FunctionButtonEqual"

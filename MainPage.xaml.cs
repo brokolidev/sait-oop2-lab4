@@ -4,7 +4,7 @@
     public partial class MainPage : ContentPage
     {
         private string _mainDisplayText;
-        private int _totalNumber;
+        private float _totalNumber;
         private string _calculatingMethod;
         private bool _isFirstNumber;
 
@@ -132,7 +132,7 @@
             }
 
             // get number to add
-            int numberToAdd = int.Parse(_mainDisplayText);
+            float numberToAdd = float.Parse(_mainDisplayText);
 
             // save the method and the number
             _calculatingMethod = "plus";
@@ -155,7 +155,7 @@
             }
 
             // get number to add
-            int numberToSub = int.Parse(_mainDisplayText);
+            float numberToSub = float.Parse(_mainDisplayText);
 
             // protecting first nuber to be negative
             if (_totalNumber == 0)
@@ -201,7 +201,7 @@
                 return;
             }
 
-            int numberToCalculate = int.Parse(_mainDisplayText);
+            float numberToCalculate = float.Parse(_mainDisplayText);
 
             switch (_calculatingMethod)
             {
@@ -219,6 +219,21 @@
             _mainDisplayText = $"{_totalNumber}";
             _isFirstNumber = true;
             _totalNumber = 0;
+            UpdateDisplay();
+        }
+
+        private void NumberDot_Clicked(object sender, EventArgs e)
+        {
+
+            // if it is already a decimal number, return
+            if (_mainDisplayText.Contains(".") && !_isFirstNumber)
+            {
+                System.Diagnostics.Debug.WriteLine("The number is already a decimal number.");
+                return;
+            }
+
+            _mainDisplayText = _isFirstNumber ? "." : _mainDisplayText + ".";
+            _isFirstNumber = !_isFirstNumber && _isFirstNumber;
             UpdateDisplay();
         }
     }

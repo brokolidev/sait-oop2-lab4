@@ -120,6 +120,22 @@
             this.Reset();
         }
 
+        // This method is used to handle the event when the . button is clicked.
+        private void NumberDot_Clicked(object sender, EventArgs e)
+        {
+
+            // if it is already a decimal number, return
+            if (_mainDisplayText.Contains(".") && !_isFirstNumber)
+            {
+                System.Diagnostics.Debug.WriteLine("The number is already a decimal number.");
+                return;
+            }
+
+            _mainDisplayText = _isFirstNumber ? "." : _mainDisplayText + ".";
+            _isFirstNumber = !_isFirstNumber && _isFirstNumber;
+            UpdateDisplay();
+        }
+
         // This method is used to handle the event when the function buttons are clicked.
         private void FuntionButtonPlus_Clicked(object sender, EventArgs e)
         {
@@ -131,17 +147,24 @@
                 return;
             }
 
-            // get number to add
-            float numberToAdd = float.Parse(_mainDisplayText);
+            if (_calculatingMethod != "" && _calculatingMethod != "plus" && !_isFirstNumber)
+            {
+                Calculate();
+
+                _calculatingMethod = "plus";
+                return;
+            }
+
+            // preventing clicked multiple times
+            if (_isFirstNumber)
+            {
+                return;
+            }
 
             // save the method and the number
             _calculatingMethod = "plus";
-            _totalNumber += numberToAdd;
 
-            // reset the main display text
-            _mainDisplayText = $"{_totalNumber}";
-            _isFirstNumber = true;
-            UpdateDisplay();
+            Calculate();
         }
 
         // This method is used to handle the event when the - button is clicked.
@@ -154,30 +177,89 @@
                 return;
             }
 
-            // get number to add
-            float numberToSub = float.Parse(_mainDisplayText);
-
-            // protecting first number to be negative
-            if (_totalNumber == 0)
+            if (_calculatingMethod != "" && _calculatingMethod != "minus" && !_isFirstNumber)
             {
-                numberToSub *= -1;
+                Calculate();
+
+                _calculatingMethod = "minus";
+                return;
+            }
+
+            
+            if (_isFirstNumber)
+            {
+                return;
+            }
+
+            // save the method
+            _calculatingMethod = "minus";
+
+            Calculate();
+        }
+
+
+        // This method is used to handle the event when the * button is clicked.
+        private void MultiplyButton_Clicked(object sender, EventArgs e)
+        {
+            // check if there is a number to multiply
+            if (String.IsNullOrEmpty(_mainDisplayText))
+            {
+                System.Diagnostics.Debug.WriteLine("No number to multiply.");
+                return;
+            }
+
+            if (_calculatingMethod != "" && _calculatingMethod != "multiply" && !_isFirstNumber)
+            {
+                Calculate();
+
+                _calculatingMethod = "multiply";
+                return;
+            }
+
+            // preventing clicked multiple times
+            if (_isFirstNumber)
+            {
+                return;
             }
 
             // save the method and the number
-            _calculatingMethod = "minus";
-            _totalNumber -= numberToSub;
+            _calculatingMethod = "multiply";
 
-            // update the main display text
-            _mainDisplayText = $"{_totalNumber}";
+            Calculate();
+        }
 
-            // protecting first number to be negative
-            if (numberToSub == _totalNumber)
+        // This method is used to handle the event when the / button is clicked.
+        private void DivisionButton_Clicked(object sender, EventArgs e)
+        {
+            // check if there is a number to divide
+            if (String.IsNullOrEmpty(_mainDisplayText))
             {
-                _totalNumber *= -1;
+                System.Diagnostics.Debug.WriteLine("No number to divide.");
+                return;
             }
 
-            _isFirstNumber = true;
-            UpdateDisplay();
+            // get number to divide
+            float numberToDivide = float.Parse(_mainDisplayText);
+
+            if (_calculatingMethod != "" && _calculatingMethod != "divide" && !_isFirstNumber)
+            {
+                Calculate();
+
+                _calculatingMethod = "divide";
+                return;
+            }
+
+            // preventing clicked multiple times
+            if(_isFirstNumber)
+            {
+                return;
+            }
+
+            // save the method
+            _calculatingMethod = "divide";
+
+
+            Calculate();
         }
 
         // This method is used to handle the event when the = button is clicked.
@@ -195,79 +277,75 @@
                 return;
             }
 
-            if (_calculatingMethod == "")
-            {
-                System.Diagnostics.Debug.WriteLine("No calculation method selected.");
-                return;
-            }
+            Calculate();
 
+            // set the total number to 0 to start over
+            _totalNumber = 0;
+        }
+
+        private void Calculate()
+        {
             float numberToCalculate = float.Parse(_mainDisplayText);
 
-            switch (_calculatingMethod)
+            // protecting first number to be negative
+            if (_totalNumber == 0 && _calculatingMethod == "minus")
+            {
+                numberToCalculate*= -1;
+            }
+
+
+            switch (this._calculatingMethod)
             {
                 case "plus":
                     _totalNumber += numberToCalculate;
                     break;
+
                 case "minus":
                     _totalNumber -= numberToCalculate;
                     break;
+
                 case "multiply":
-                    _totalNumber *= numberToCalculate;
+
+                    // preventing multiply by 0
+                    if (_totalNumber == 0)
+                    {
+                        _totalNumber = numberToCalculate;
+                    }
+                    else
+                    {
+                        _totalNumber *= numberToCalculate;
+                    }
+
                     break;
+
+                case "divide":
+
+                    // preventing divide by 0
+                    if (_totalNumber == 0)
+                    {
+                        _totalNumber = numberToCalculate;
+                    }
+                    else
+                    {
+                        _totalNumber /= numberToCalculate;
+                    }
+
+                    break;
+
                 default:
+                    System.Diagnostics.Debug.WriteLine("No calculation method selected.");
                     return;
+
             }
 
             // update the main display text
             _mainDisplayText = $"{_totalNumber}";
-            _isFirstNumber = true;
-            _totalNumber = 0;
-            UpdateDisplay();
-        }
 
-        private void NumberDot_Clicked(object sender, EventArgs e)
-        {
-
-            // if it is already a decimal number, return
-            if (_mainDisplayText.Contains(".") && !_isFirstNumber)
+            // protecting first number to be negative
+            if (numberToCalculate == _totalNumber && _calculatingMethod == "minus")
             {
-                System.Diagnostics.Debug.WriteLine("The number is already a decimal number.");
-                return;
+                _totalNumber *= -1;
             }
-
-            _mainDisplayText = _isFirstNumber ? "." : _mainDisplayText + ".";
-            _isFirstNumber = !_isFirstNumber && _isFirstNumber;
-            UpdateDisplay();
-        }
-
-        private void MultiplyButton_Clicked(object sender, EventArgs e)
-        {
-            // check if there is a number to multiply
-            if (String.IsNullOrEmpty(_mainDisplayText))
-            {
-                System.Diagnostics.Debug.WriteLine("No number to multiply.");
-                return;
-            }
-
-            // get number to multiply
-            float numberToMultiply = float.Parse(_mainDisplayText);
-
-            // save the method and the number
-            _calculatingMethod = "multiply";
-
-            // preventing multiply by 0
-            if(_totalNumber == 0)
-            {
-                _totalNumber = numberToMultiply;
-            } 
-            else
-            {
-                _totalNumber *= numberToMultiply;
-            }
-            
-
-            // update the main display text
-            _mainDisplayText = $"{_totalNumber}";
 
             _isFirstNumber = true;
             UpdateDisplay();

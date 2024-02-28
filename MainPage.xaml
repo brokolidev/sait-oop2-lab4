@@ -31,6 +31,8 @@
             WidthRequest="100" HeightRequest="100" CornerRadius="50" FontSize="30" Text="%"></Button>
 
             <Button 
+                x:Name="DivisionButton"
+                Clicked="DivisionButton_Clicked"
             Background="Orange"
             WidthRequest="100" HeightRequest="100" CornerRadius="50" FontSize="30" Text="÷"></Button>
         </HorizontalStackLayout>

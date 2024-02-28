@@ -157,12 +157,25 @@
             // get number to add
             int numberToSub = int.Parse(_mainDisplayText);
 
+            // protecting first nuber to be negative
+            if (_totalNumber == 0)
+            {
+                numberToSub *= -1;
+            }
+
             // save the method and the number
-            _calculatingMethod = "plus";
+            _calculatingMethod = "minus";
             _totalNumber -= numberToSub;
 
             // update the main display text
             _mainDisplayText = $"{_totalNumber}";
+
+            // protecting first nuber to be negative
+            if (numberToSub == _totalNumber)
+            {
+                _totalNumber *= -1;
+            }
+
             _isFirstNumber = true;
             UpdateDisplay();
         }
